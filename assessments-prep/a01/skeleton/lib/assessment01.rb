@@ -4,11 +4,14 @@ class Array
   # Monkey patch the Array class and add a my_inject method. If my_inject receives
   # no argument, then use the first element of the array as the default accumulator.
 
-  def my_inject(accumulator = nil)
-    duplicated_array = self.dup
-    output = accumulator ? accumulator : duplicated_array.shift
-    output = yield(output, duplicated_array.shift) until duplicated_array.length < 1
-    output
+  def my_inject!(accumulator = nil, &prc)
+    accumulator ||= self.shift
+    accumulator = prc.call(accumulator, self.shift) until self.length < 1
+    accumulator
+  end
+
+  def my_inject(accumulator = nil, &prc)
+    self.dup.my_inject!(accumulator, &prc)
   end
 end
 
@@ -36,13 +39,9 @@ end
 # is 1!, the 3rd factorial is 2!, etc.
 
 def factorials_rec(num)
-  return [] if num < 1
-  factorials_rec(num-1) + [factorial(num-1)]
-end
-
-def factorial(num)
-  return 1 if num <= 1
-  num * factorial(num-1)
+  return [1,1].take(num) if num < 3
+  factorials = factorials_rec(num - 1)
+  factorials << factorials.last * (num -1)
 end
 
 class Array
