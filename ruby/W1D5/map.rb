@@ -9,15 +9,17 @@ class Map
     else
       @map << [key, value]
     end
+    [key, value]
   end
 
   def remove(key)
     @map.delete_if {|item| item[0] == key}
+    nil
   end
 
   def lookup(key)
     @map.each {|item| return item[1] if item[0] == key}
-    false
+    nil
   end
 
   def update(key, value)
@@ -30,7 +32,14 @@ class Map
   end
 
   def show
-    @map.dup
+    deep_dup(@map)
+  end
+
+  private
+  def deep_dup(arr)
+    new_arr = []
+    arr.each {|item| new_arr << (item.is_a?(Array) ? deep_dup(item) : item)}
+    new_arr
   end
 end
 
@@ -40,5 +49,8 @@ if __FILE__ == $PROGRAM_NAME
   map.assign("something", "nothing")
   puts map.lookup("something")
   map.assign("something", "something else")
+  map.assign("something2", "something else again")
+  map.remove("something2")
   puts map.lookup("something")
+  p map.show
 end
