@@ -120,6 +120,15 @@ class Array
 
     Array.first_for_merge(left, right, &prc) + Array.merge(left, right, &prc)
   end
+  
+  def self.merge(left, right, &prc)
+    prc ||= Proc.new {|a,b| a <=> b}
+    merged = []
+
+    merged += Array.first_for_merge(left, right, &prc) until left.empty? || right.empty?
+
+    merged + left + right
+  end
 
   def self.first_for_merge(left, right, &prc)
     [prc.call(left.first, right.first) < 0 ? left.shift : right.shift]
