@@ -5,12 +5,16 @@ class Array
     length.times do |num|
       prc.call self[num]
     end
+
+    self
   end
 
   def my_each_with_index(&prc)
     length.times do |num|
       prc.call self[num], num
     end
+
+    self
   end
 
   def my_select(&prc)
@@ -68,26 +72,48 @@ class Array
   end
 
   def my_rotate(num=1)
-    num > 0 ? drop(num) + take(num) : drop(length + num) + take(length + num)
+    actual_num = num.abs % length * (num / num.abs)
+    num > 0 ? drop(actual_num) + take(actual_num) : drop(length + actual_num) + take(length + actual_num)
   end
 
   def my_join(str = "")
-
+    reduce {|a,b| a+str+b}
   end
 
   def my_reverse
-
+    Array.new(length) do |index|
+      self[-(index+1)]
+    end
   end
 
   #Write a monkey patch of quick sort that accepts a block
   def my_quick_sort(&prc)
+    return self if length <=1
 
+    prc ||= Proc.new {|a,b| a <=> b}
+
+    pivot = shift
+    left = my_select {|el| prc.call(el, pivot) < 0}
+    right = my_select {|el| prc.call(el, pivot) >= 0}
+
+    left.my_quick_sort(&prc) + [pivot] + right.my_quick_sort(&prc)
   end
 
   # Write a monkey patch of binary search that accepts a comparison block:
   # E.g. [1, 2, 3, 4, 5, 7].my_bsearch(6) {|el, targ| el+1 <=> targ} => 4
   def my_bsearch(target, &prc)
-
+    return nil if length < 1
+    prc ||= Proc.new {|a,b| a <=> b}
+    pivot_index = length/2
+    case prc.call self[pivot_index], target
+    when -1
+      result = drop(pivot_index + 1).my_bsearch(target, &prc)
+      return nil unless result
+      result + pivot_index + 1
+    when 0
+      pivot_index
+    when 1
+      take(pivot_index).my_bsearch(target, &prc)
+    end
   end
-
 end
