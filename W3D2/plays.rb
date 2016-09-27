@@ -26,7 +26,7 @@ class ORM
   end
 
   def execute(*args)
-    PlayDBConnection.instance.execute(args.shift, *args)
+    PlayDBConnection.instance.execute(*args)
   end
 
   def method_missing(method, *args, &prc)
