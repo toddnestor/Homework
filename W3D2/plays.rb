@@ -1,13 +1,6 @@
 require 'sqlite3'
 require 'singleton'
 
-class String
-  def add_slashes
-    # self.gsub(/['"\\\x0]/,'\\\\\0')
-    self
-  end
-end
-
 class PlayDBConnection < SQLite3::Database
   include Singleton
 
@@ -32,6 +25,10 @@ class ORM
     @offset = ''
   end
 
+  def execute(*args)
+    PlayDBConnection.instance.execute(args.shift, *args)
+  end
+
   def method_missing(method, *args, &prc)
     method_name = method.to_s
 
@@ -47,7 +44,7 @@ class ORM
   end
 
   def get
-    data = PlayDBConnection.instance.execute(to_sql, *@args)
+    data = execute(to_sql, *@args)
     things = []
 
     data.each do |datum|
@@ -146,7 +143,7 @@ class ORM
         (#{options.keys.map{'?'}.join(', ')})
     SQL
 
-    PlayDBConnection.instance.execute(sql, *options.values)
+    execute(sql, *options.values)
 
     options['id'] = PlayDBConnection.instance.last_insert_row_id
     self.class.new(options)
@@ -160,7 +157,7 @@ class ORM
       WHERE id = ?
     SQL
 
-    PlayDBConnection.instance.execute(sql, @id)
+    execute(sql, @id)
   end
 end
 
@@ -181,7 +178,7 @@ class Play < ORM
 
   def create
     raise "#{self} already in database" if @id
-    PlayDBConnection.instance.execute(<<-SQL, @title, @year, @playwright_id)
+    execute(<<-SQL, @title, @year, @playwright_id)
       INSERT INTO
         plays (title, year, playwright_id)
       VALUES
@@ -192,7 +189,7 @@ class Play < ORM
 
   def update
     raise "#{self} not in database" unless @id
-    PlayDBConnection.instance.execute(<<-SQL, @title, @year, @playwright_id, @id)
+    execute(<<-SQL, @title, @year, @playwright_id, @id)
       UPDATE
         #{TABLE}
       SET
@@ -243,7 +240,7 @@ class Playwright < ORM
 
   def update
     raise "#{self} not in database" unless @id
-    PlayDBConnection.instance.execute(<<-SQL, @name, @birth_year, @id)
+    execute(<<-SQL, @name, @birth_year, @id)
       UPDATE
         #{TABLE}
       SET
