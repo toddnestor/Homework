@@ -134,6 +134,10 @@ class ORM
     self
   end
 
+  def self.all
+    self.class.new.get
+  end
+
   def insert(options = {})
     sql = <<-SQL
       INSERT INTO
@@ -147,16 +151,23 @@ class ORM
     options['id'] = PlayDBConnection.instance.last_insert_row_id
     self.class.new(options)
   end
+
+  def delete
+    raise unless @id
+
+    sql = <<-SQL
+      DELETE FROM #{self.class::TABLE}
+      WHERE id = ?
+    SQL
+
+    PlayDBConnection.instance.execute(sql, @id)
+  end
 end
 
 class Play < ORM
   attr_accessor :title, :year, :playwright_id
 
   TABLE = 'plays'
-
-  def self.all
-    Play.new.get
-  end
 
   def initialize(options = {})
     if options.length > 0
@@ -209,10 +220,6 @@ class Playwright < ORM
 
   TABLE = 'playwrights'
 
-  def self.all
-    Playwright.new.get
-  end
-
   def self.find_by_name(name)
     data = Playwright.new.find_by_name(name).get
     return nil if data.empty?
@@ -226,6 +233,12 @@ class Playwright < ORM
 
   def get_plays
     Play.new.where_playwright_id(@id).get
+  end
+
+  def add_play(options)
+    options['playwright_id'] = @id
+    Play.new(options).create
+    get_plays.last
   end
 
   def update
