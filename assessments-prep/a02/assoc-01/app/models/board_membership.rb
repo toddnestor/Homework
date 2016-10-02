@@ -7,5 +7,5 @@ class BoardMembership < ActiveRecord::Base
   belongs_to :member,
     primary_key: :id,
     foreign_key: :member_id,
-    class_name: :User
+    class_name: :Executive
 end

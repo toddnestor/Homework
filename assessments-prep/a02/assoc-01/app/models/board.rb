@@ -12,4 +12,8 @@ class Board < ActiveRecord::Base
   has_many :members,
     through: :memberships,
     source: :member
+
+  has_one :exchange,
+    through: :company,
+    source: :exchange
 end
