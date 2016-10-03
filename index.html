@@ -12,14 +12,6 @@
         background-color: #f00;
       }
 
-      footer {
-        text-align: center;
-        color: #fff;
-        padding: 5px;
-        position: fixed;
-        bottom: 0;
-      }
-
       header {
         position: fixed;
         width: 100%;
@@ -173,6 +165,66 @@
         margin: 0;
         margin-top:50px;
       }
+
+      footer {
+        text-align: center;
+        color: #fff;
+        padding: 5px;
+        position: fixed;
+        bottom: 0;
+      }
+
+      @media (max-width: 1500px) {
+        article {
+          width: 80%;
+        }
+      }
+
+      @media (max-width: 1100px) {
+        article {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 875px) {
+        .col-1 {
+          width: 16.666667%;
+        }
+
+        .col-2 {
+          width: 33.3333333%;
+        }
+
+        .col-offset-2 {
+          margin-left: 0%;
+        }
+
+        .col-3 {
+          width: 50%;
+        }
+
+        .col-offset-3 {
+          margin-left: 50%;
+        }
+
+        .col-4 {
+          width: 66.666666666667%;
+        }
+
+        .col-5 {
+          width: 83.33333%;
+        }
+
+        .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 606px) {
+        nav ul {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body>
@@ -236,7 +288,7 @@
         </section>
       </section>
     </article>
-    <footer class="col-12">
+    <footer class="col-12" style="padding:5px;">
         &copy; 2016 Your Face
     </footer>
   </body>
