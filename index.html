@@ -220,28 +220,32 @@
         }
       }
 
-      .rating {
-        unicode-bidi: bidi-override;
-        direction: rtl;
-        text-align: center;
-      }
       .rating > span {
         display: inline-block;
         position: relative;
         width: 1.1em;
       }
-      .rating > span:hover,
-      .rating > span:hover ~ span {
+
+      .rating > span.rated {
         color: transparent;
       }
-      .rating > span:hover:before,
-      .rating > span:hover ~ span:before {
+
+      .rating > span.rated:before {
          content: "\2605";
          position: absolute;
          left: 0;
          color: gold;
-}
+      }
 
+      input:not([type=radio]), select, textarea {
+        width: 100%;
+        border-radius: 3px;
+        margin: 5px;
+      }
+
+      .review {
+        margin-top: 30px;
+      }
 
       @media (max-width: 606px) {
         nav ul {
@@ -324,7 +328,7 @@
           <h2>Review this recipe</h2>
           <div class="col-12">
             <label for="reviewer-name">Name:</label>
-            <input type="text" id="reviewer-name" />
+            <input type="text" id="reviewer-name" placeholder="Enter your name here" />
             <label for="rating">Rating</label>
             1 <input checked type="radio" value="1" name="rating" />
             2 <input type="radio" value="2" name="rating" />
@@ -342,6 +346,11 @@
             </select>
           </div>
           <div class="col-12" style="margin-top:30px">
+            <label>Review
+              <textarea style="min-height:100px" id="review-text" placeholder="Enter your review here"></textarea>
+          </div>
+          <div class="col-12" style="margin-top:30px">
+            <button class="submit-review">Submit</button>
           </div>
         </section>
       </section>
@@ -356,30 +365,64 @@
           api_key: '2b7734e19bc8f8a4b61beb456a0a0deb76505733ffb9167f67e1914d7f85'
       });
 
+      var experience = {
+        'sometimes': 'Sometimes Cook',
+        'everyday': 'Cook Everyday',
+        'hobby': 'Cooking is a hobby',
+        'chef': 'Professional Chef'
+      }
+
+      var rating = function(score) {
+        console.log("the rating: ", score)
+        html = "<div class='rating'>"
+
+        for(var i = 0; i < 5; i++) {
+          html += "<span class='" + (i + 1 <= parseInt(score) ? 'rated' : '') +"'>☆</span>"
+        }
+
+        html += '</div>'
+
+        return html
+      }
+
       var template = function(data) {
         html = [
           "<div class='review'>",
-            "<div><strong>" + data.name + "</strong> - " + data.experience + "</div>",
-            "<div class='rating'><span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span></div>",
-            "<div class='review-text'>" + data.review + '</div>',
+            "<div><strong>" + data.name + "</strong> - " + experience[data.meta_data.experience] + "</div>",
+            rating(data.meta_data.rating),
+            "<div class='review-text'>" + data.meta_data.review + '</div>',
           "</div>"
         ]
 
         return html.join("\n")
       }
 
+      $('.submit-review').click(function(e){
+        e.preventDefault();
+
+        data = {
+          type: 'review',
+          name: $('#reviewer-name').val(),
+          field_experience: $('#cooking-expertise').val(),
+          field_rating: $('[name=rating]:checked').val(),
+          field_review: $('#review-text').val()
+        }
+
+        $.herc.Objects().post(data, function(response){
+          console.log('we got a response!', response)
+        })
+      })
+
       $.herc.Objects().getAll(
         {type: 'review'},
         function(response) {
-          /*
           if(response.length > 0) {
             $('#reviews').html('');
 
             $.each(response, function( key, value ) {
               $('#reviews').prepend(template(value));
-            }
+            })
           }
-          */
         }
       )
     </script>
