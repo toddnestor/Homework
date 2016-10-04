@@ -220,6 +220,29 @@
         }
       }
 
+      .rating {
+        unicode-bidi: bidi-override;
+        direction: rtl;
+        text-align: center;
+      }
+      .rating > span {
+        display: inline-block;
+        position: relative;
+        width: 1.1em;
+      }
+      .rating > span:hover,
+      .rating > span:hover ~ span {
+        color: transparent;
+      }
+      .rating > span:hover:before,
+      .rating > span:hover ~ span:before {
+         content: "\2605";
+         position: absolute;
+         left: 0;
+         color: gold;
+}
+
+
       @media (max-width: 606px) {
         nav ul {
           display: none;
@@ -232,9 +255,9 @@
       <nav style="min-height:50px;">
         <img src="https://d3ec71zsp1ok15.cloudfront.net/assets/shared/logo-full-white-afe1a479fe41e18e1b2821ce490a7f15147942a319d0c7d4be52fe9b639e5c4c.svg" class="logo" />
         <ul>
-          <li><a href="#description">Description</a></li>
-          <li><a href="#ingredients">Ingredients</a></li>
           <li><a href="#instructions">Instructions</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+          <li><a href="#add-review">Add your review</a></li>
         </ul>
       </nav>
     </header>
@@ -289,9 +312,76 @@
           </ol>
         </section>
       </section>
+      <section>
+        <div class="col-offset-2 col-8" style="padding-top: 10px; margin-top: 10px; border-top: 2px solid #ccc;"> </div>
+        <section class="col-offset-3 col-6">
+          <h2>Reviews</h2>
+          <div id="reviews" style="text-align: center;">
+            No reviews yet
+          </div>
+        </section>
+        <section id="add-your-review" class="col-offset-3 col-6" style="margin-bottom: 50px;">
+          <h2>Review this recipe</h2>
+          <div class="col-12">
+            <label for="reviewer-name">Name:</label>
+            <input type="text" id="reviewer-name" />
+            <label for="rating">Rating</label>
+            1 <input checked type="radio" value="1" name="rating" />
+            2 <input type="radio" value="2" name="rating" />
+            3 <input type="radio" value="3" name="rating" />
+            4 <input type="radio" value="4" name="rating" />
+            5 <input type="radio" value="5" name="rating" />
+          </div>
+          <div class="col-12" style="margin-top:30px;">
+            <label for="cooking-expertise">Cooking Expertise</label>
+            <select id="cooking-expertise">
+              <option value="sometimes">Sometimes Cook</option>
+              <option value="everyday">Cook Everyday</option>
+              <option value="hobby">Cooking is a hobby</option>
+              <option value="chef">Professional Chef</option>
+            </select>
+          </div>
+          <div class="col-12" style="margin-top:30px">
+          </div>
+        </section>
+      </section>
     </article>
     <footer class="col-12" style="padding:5px;">
         &copy; 2016 Your Face
     </footer>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://herc-scripts.objects.cdn.dream.io/jHerc.min.js"></script>
+    <script type="text/javascript">
+      $.herc.configure({
+          api_key: '2b7734e19bc8f8a4b61beb456a0a0deb76505733ffb9167f67e1914d7f85'
+      });
+
+      var template = function(data) {
+        html = [
+          "<div class='review'>",
+            "<div><strong>" + data.name + "</strong> - " + data.experience + "</div>",
+            "<div class='rating'><span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span></div>",
+            "<div class='review-text'>" + data.review + '</div>',
+          "</div>"
+        ]
+
+        return html.join("\n")
+      }
+
+      $.herc.Objects().getAll(
+        {type: 'review'},
+        function(response) {
+          /*
+          if(response.length > 0) {
+            $('#reviews').html('');
+
+            $.each(response, function( key, value ) {
+              $('#reviews').prepend(template(value));
+            }
+          }
+          */
+        }
+      )
+    </script>
   </body>
 </html>
