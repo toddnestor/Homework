@@ -321,7 +321,7 @@
         <section class="col-offset-3 col-6">
           <h2>Reviews</h2>
           <div id="reviews" style="text-align: center;">
-            No reviews yet
+            <span class="no-reviews">No reviews yet</span>
           </div>
         </section>
         <section id="add-your-review" class="col-offset-3 col-6" style="margin-bottom: 50px;">
@@ -410,6 +410,8 @@
 
         $.herc.Objects().post(data, function(response){
           console.log('we got a response!', response)
+          $('.no-reviews').hide();
+          $('#reviews').prepend(template(response));
         })
       })
 
