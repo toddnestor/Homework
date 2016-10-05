@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Ziqin Hu's Fried Rice</title>
     <style>
       * {
@@ -220,6 +221,33 @@
         }
       }
 
+      .rating > span {
+        display: inline-block;
+        position: relative;
+        width: 1.1em;
+      }
+
+      .rating > span.rated {
+        color: transparent;
+      }
+
+      .rating > span.rated:before {
+         content: "\2605";
+         position: absolute;
+         left: 0;
+         color: gold;
+      }
+
+      input:not([type=radio]), select, textarea {
+        width: 100%;
+        border-radius: 3px;
+        margin: 5px;
+      }
+
+      .review {
+        margin-top: 30px;
+      }
+
       @media (max-width: 606px) {
         nav ul {
           display: none;
@@ -232,9 +260,9 @@
       <nav style="min-height:50px;">
         <img src="https://d3ec71zsp1ok15.cloudfront.net/assets/shared/logo-full-white-afe1a479fe41e18e1b2821ce490a7f15147942a319d0c7d4be52fe9b639e5c4c.svg" class="logo" />
         <ul>
-          <li><a href="#description">Description</a></li>
-          <li><a href="#ingredients">Ingredients</a></li>
           <li><a href="#instructions">Instructions</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+          <li><a href="#add-review">Add your review</a></li>
         </ul>
       </nav>
     </header>
@@ -289,9 +317,116 @@
           </ol>
         </section>
       </section>
+      <section>
+        <div class="col-offset-2 col-8" style="padding-top: 10px; margin-top: 10px; border-top: 2px solid #ccc;"> </div>
+        <section class="col-offset-3 col-6">
+          <h2>Reviews</h2>
+          <div id="reviews" style="text-align: center;">
+            <span class="no-reviews">No reviews yet</span>
+          </div>
+        </section>
+        <section id="add-your-review" class="col-offset-3 col-6" style="margin-bottom: 50px;">
+          <h2>Review this recipe</h2>
+          <div class="col-12">
+            <label for="reviewer-name">Name:</label>
+            <input type="text" id="reviewer-name" placeholder="Enter your name here" />
+            <label for="rating">Rating</label>
+            1 <input checked type="radio" value="1" name="rating" />
+            2 <input type="radio" value="2" name="rating" />
+            3 <input type="radio" value="3" name="rating" />
+            4 <input type="radio" value="4" name="rating" />
+            5 <input type="radio" value="5" name="rating" />
+          </div>
+          <div class="col-12" style="margin-top:30px;">
+            <label for="cooking-expertise">Cooking Expertise</label>
+            <select id="cooking-expertise">
+              <option value="sometimes">Sometimes Cook</option>
+              <option value="everyday">Cook Everyday</option>
+              <option value="hobby">Cooking is a hobby</option>
+              <option value="chef">Professional Chef</option>
+            </select>
+          </div>
+          <div class="col-12" style="margin-top:30px">
+            <label>Review
+              <textarea style="min-height:100px" id="review-text" placeholder="Enter your review here"></textarea>
+          </div>
+          <div class="col-12" style="margin-top:30px">
+            <button class="submit-review">Submit</button>
+          </div>
+        </section>
+      </section>
     </article>
     <footer class="col-12" style="padding:5px;">
         &copy; 2016 Your Face
     </footer>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://herc-scripts.objects.cdn.dream.io/jHerc.min.js"></script>
+    <script type="text/javascript">
+      $.herc.configure({
+          api_key: '2b7734e19bc8f8a4b61beb456a0a0deb76505733ffb9167f67e1914d7f85'
+      });
+
+      var experience = {
+        'sometimes': 'Sometimes Cook',
+        'everyday': 'Cook Everyday',
+        'hobby': 'Cooking is a hobby',
+        'chef': 'Professional Chef'
+      }
+
+      var rating = function(score) {
+        html = "<div class='rating'>"
+
+        for(var i = 0; i < 5; i++) {
+          html += "<span class='" + (i + 1 <= parseInt(score) ? 'rated' : '') +"'>☆</span>"
+        }
+
+        html += '</div>'
+
+        return html
+      }
+
+      var template = function(data) {
+        html = [
+          "<div class='review'>",
+            "<div><strong>" + data.name + "</strong> - " + experience[data.meta_data.experience] + "</div>",
+            rating(data.meta_data.rating),
+            "<div class='review-text'>" + data.meta_data.review + '</div>',
+          "</div>"
+        ]
+
+        return html.join("\n")
+      }
+
+      $('.submit-review').click(function(e){
+        e.preventDefault();
+
+        data = {
+          type: 'review',
+          name: $('#reviewer-name').val(),
+          field_experience: $('#cooking-expertise').val(),
+          field_rating: $('[name=rating]:checked').val(),
+          field_review: $('#review-text').val()
+        }
+
+        $.herc.Objects().post(data, function(response){
+          console.log('we got a response!', response)
+          $('.no-reviews').hide();
+          $('#reviews').prepend(template(response));
+        })
+      })
+
+      $.herc.Objects().getAll(
+        {type: 'review'},
+        function(response) {
+          if(response.length > 0) {
+            $('#reviews').html('');
+
+            $.each(response, function( key, value ) {
+              $('#reviews').prepend(template(value));
+            })
+          }
+        }
+      )
+    </script>
   </body>
 </html>
