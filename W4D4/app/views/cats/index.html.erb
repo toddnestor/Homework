@@ -1,0 +1,19 @@
+<div class="col-offset-3 col-6">
+  <h1>Cats upon cats!</h1>
+</div>
+
+<div class="col-offset-3 col-6">
+<% @cats.each do |cat| %>
+  <div class="col-3">
+    <img src="<%= cat.picture %>" />
+    <%= link_to cat.name, cat_url(cat) %>
+  </div>
+<% end %>
+</div>
+<div class="col-offset-3 col-6">
+  <%= link_to "Create cat", new_cat_url %>
+</div>
+
+<% content_for :footer do %>
+  <p>This is the cats index page.</p>
+<% end %>
