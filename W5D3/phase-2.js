@@ -55,3 +55,16 @@ function elephantHelper(elephant) {
 }
 
 herd.forEach(elephantHelper)
+
+function dinerBreakfast() {
+  var order = "I'd like cheesy scrambled eggs please";
+
+  return function(food) {
+    order += " and " + food
+    return order
+  }
+}
+
+var bfastOrder = dinerBreakfast();
+console.log(bfastOrder("chocolate chip pancakes"));
+console.log(bfastOrder("grits"));
