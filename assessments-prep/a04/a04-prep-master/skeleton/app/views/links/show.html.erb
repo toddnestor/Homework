@@ -1,0 +1,6 @@
+<h3><%= link_to 'Links', links_url %></h3>
+<h1><%= @link.title %> <%= link_to 'Edit Link', edit_link_url(@link) %></h1>
+<h2>Author <%= @link.user.username %></h2>
+<h3><%= @link.url %></h3>
+<%= render 'comments/form' %>
+<%= render 'comments/list' %>

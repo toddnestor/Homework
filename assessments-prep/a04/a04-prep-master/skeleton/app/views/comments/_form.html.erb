@@ -1,0 +1,11 @@
+<h3>Add Comment</h3>
+
+<form class="" action="<%= comments_url %>" method="post">
+  <%= auth_token %>
+  <input type="hidden" name="comment[link_id]" value="<%= @link.id %>">
+  <label>
+    Comment
+    <textarea name="comment[body]" rows="8" cols="40"></textarea>
+  </label>
+  <button>Add Comment</button>
+</form>

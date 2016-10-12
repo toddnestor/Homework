@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Links</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <% if current_user %>
+    <h2>Hello <%= current_user.username %></h2>
+    <%= button_to "Sign Out", session_url, method: :delete %>
+  <% end %>
+
+  <%= render 'shared/errors' %>
+  <%= yield %>
+
+</body>
+</html>

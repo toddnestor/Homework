@@ -1,0 +1,5 @@
+<%= link_to "Links", links_url %>
+<h1><%= @link.title %></h1>
+<h3><%= link_to "Edit Link", edit_link_url(@link) %></h3>
+<h3>URL <%= @link.url %></h3>
+<h3>by <%= @link.user.username %></h3>
