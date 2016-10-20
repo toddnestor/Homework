@@ -1,0 +1,113 @@
+body {
+  color: #000;
+  font-family: sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  background-color: #eee;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  text-align: left;
+}
+
+.header {
+  background-color: #f00;
+  color: #fff;
+  border-bottom: 1px solid #ccc;
+}
+
+.header-nav {
+  margin: 0 auto;
+  width: 900px;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+
+
+.header-logo {
+  float: left;
+  border-right: 1px solid #ccc;
+  font-weight: 700;
+}
+
+.header a {
+  padding: 10px 20px;
+  display: block;
+}
+
+.header a:hover {
+  background-color: #000;
+}
+
+.header-list {
+  float: right;
+}
+
+.header-list li {
+  float: left;
+  border-left: 1px solid #ccc;
+}
+
+.group:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.content {
+    margin: 0 auto;
+    background: #fff;
+    width: 900px;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.content-sidebar {
+    float: left;
+    width: 200px;
+    padding: 20px;
+}
+
+.content h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+}
+
+.content-main {
+    float: left;
+    width: 620px;
+    padding: 20px;
+}
+
+.footer {
+    width: 900px;
+    margin: 0 auto 50px auto;
+    background: #fff;
+    color: #aaa;
+    font-size: 14px;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.footer-copy {
+    padding: 20px;
+    float: left;
+}
+
+.footer-links {
+    padding: 20px;
+    float: right;
+}
+
+.footer-links > li {
+    float: left;
+    padding: 0 0 0 20px;
+}
+
+.footer-links a:hover {
+  color: #000;
+}
